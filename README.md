@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue搭建后台管理界面模版（PC端）
 ------------------------
 
@@ -207,3 +208,7 @@ github地址：https://github.com/nmgwap/vue-ManagementPlatform.git
 
 
 
+=======
+# -
+后台管理系统使用的是vue2
+>>>>>>> 79cbde94c3733354aa1327becb4753d0d1be70ac
