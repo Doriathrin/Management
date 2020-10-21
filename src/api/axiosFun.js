@@ -25,6 +25,9 @@ const loginreq = (method, url, params) => {
         ]
     }).then(res => res.data);
 };
+if (localStorage.adminToken) {
+  axios.defaults.headers.Authorization = 'Bearer' + localStorage.adminToken
+}
 // 通用公用方法
 const req = (method, url, params) => {
     return axios({

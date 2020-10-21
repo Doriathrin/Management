@@ -12,7 +12,8 @@ import store from './vuex/store';
 // 引入icon
 import './assets/icon/iconfont.css'
 // 
-
+import './border.css';
+// import './reset.css';
 // 引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts

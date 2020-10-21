@@ -13,11 +13,12 @@ export default {
 <style> 
 html,
 body {
-    width: 100%;
+    min-width:1280px;
     height: 100%;
     box-sizing: border-box;
     padding: 0px;
     margin: 0px;
+    background: #E6E6E6;
 }
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -26,5 +27,9 @@ body {
     color: #2c3e50;
     widows: 100%;
     height: 100%;
+}
+*{
+  padding: 0;
+  margin: 0;
 }
 </style>

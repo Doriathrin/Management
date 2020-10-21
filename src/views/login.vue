@@ -9,11 +9,11 @@
         <el-input type="password" v-model="ruleForm.password" auto-complete="off" placeholder="密码"></el-input>
       </el-form-item>
       <el-row>
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item prop="code">
             <el-input type="text" v-model="ruleForm.code" auto-complete="off" placeholder="图形验证码" @keyup.enter.native="submitForm('ruleForm')"></el-input>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="12" class="code-box">
           <img :src="ruleForm.codeimg" alt="" class="codeimg" @click="getcode()">
         </el-col>
@@ -55,10 +55,10 @@ export default {
   },
   // 创建完毕状态(里面是操作)
   created() {
-    this.$message({
-      message: '账号密码及验证码不为空即可',
-      type: 'success'
-    })
+    // this.$message({
+    //   // message: '账号密码及验证码不为空即可',
+    //   type: 'success'
+    // })
     // 获取图形验证码
     this.getcode()
     // 获取存在本地的用户名密码

@@ -35,7 +35,7 @@ import navcon from '../components/navcon.vue'
 import leftnav from '../components/leftnav.vue'
 export default {
   name: 'index',
-  data() {
+  data () {
     return {
       showclass: 'asideshow',
       showtype: false
@@ -47,7 +47,7 @@ export default {
     leftnav
   },
   methods: {},
-  created() {
+  created () {
     // 监听
     this.$root.Bus.$on('toggle', value => {
       if (value) {
@@ -59,14 +59,14 @@ export default {
       }
     })
   },
-  beforeUpdate() {},
+  beforeUpdate () { },
   // 挂载前状态(里面是操作)
-  beforeMount() {
+  beforeMount () {
     // 弹出登录成功
-    this.$message({
-      message: '登录成功',
-      type: 'success'
-    })
+    // this.$message({
+    //   message: '登录成功',
+    //   type: 'success'
+    // })
   }
 }
 </script>
@@ -80,18 +80,20 @@ export default {
 .aside {
   width: 64px !important;
   height: 100%;
-  background-color: #334157;
+  background-color: #020E20;
   margin: 0px;
 }
 .asideshow {
   width: 240px !important;
   height: 100%;
-  background-color: #334157;
+  background-color: #020E20;
   margin: 0px;
 }
 .index-header,
 .index-main {
   padding: 0px;
-  border-left: 2px solid #333;
+  /* border-left: 2px solid #333; */
+  margin-left: -20px;
+  width: 90%;
 }
 </style>

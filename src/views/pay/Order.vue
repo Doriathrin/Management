@@ -4,139 +4,223 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>交易订单</el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }">一级菜单</el-breadcrumb-item>
+        <el-breadcrumb-item>二级菜单</el-breadcrumb-item>
+      </el-breadcrumb>
     <!-- 搜索筛选 -->
-    <el-form :inline="true" :model="formInline" class="user-search">
+    <div class='QuestIonnAire'>
+      <h3>用户列表</h3>
+    </div>
+    <!-- <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item label="搜索：">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入终端编号"></el-input>
+        <el-input size="small" v-model="formInline.deptName" placeholder="输入部门名称"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-input size="small" v-model="formInline.orderNo" placeholder="输入订单号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-input size="small" v-model="formInline.transId" placeholder="输入交易单号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-select size="small" v-model="formInline.payType" placeholder="请选择">
-          <el-option v-for="type in payType" :label="type.key" :value="type.value" :key="type.value"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-select size="small" v-model="formInline.orderStatus" placeholder="请选择">
-          <el-option v-for="type in payway" :label="type.key" :value="type.value" :key="type.value"></el-option>
-        </el-select>
+      <el-form-item label="">
+        <el-input size="small" v-model="formInline.deptNo" placeholder="输入部门代码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+        <el-button size="small" type="primary" icon="el-icon-plus" @click="handleEdit()">添加</el-button>
       </el-form-item>
-    </el-form>
-    <!--列表-->
-    <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
-      <el-table-column align="center" type="index" width="60">
-      </el-table-column>
-      <el-table-column sortable prop="machineNo" label="终端编号" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="orderNo" label="订单号" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="transId" label="交易单号" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="payType" label="支付方式" width="140" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="transType" label="交易类型" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="goodsPrice" label="商品价格" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="payAmount" label="支付金额" width="180" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="goodsName" label="商品名称" width="140" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="orderStatus" label="订单状态" width="120" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column sortable prop="addTime" label="创建时间" width="180" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <div>{{scope.row.addTime|timestampToTime}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" min-width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">预览</el-button>
-          <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">退款</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页组件 -->
-    <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
-    <!-- 编辑界面 -->
-    <el-dialog :title="title" :visible.sync="editFormVisible" width="50%" @click="closeDialog('editForm')">
-      <el-form label-width="120px" :model="editForm" ref="editForm">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="公司编号">
-              <el-input size="small" v-model="editForm.deptId" auto-complete="off" placeholder="请输入名称" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="订单号">
-              <el-input size="small" v-model="editForm.orderNo" auto-complete="off" placeholder="请输入商户号" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="支付方式">
-              <el-input size="small" v-model="editForm.payType" auto-complete="off" placeholder="请输入商户号" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="交易类型">
-              <el-input size="small" v-model="editForm.transType" auto-complete="off" placeholder="请输入微信子商户" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="商品编号">
-              <el-input size="small" v-model="editForm.goodsNo" auto-complete="off" placeholder="请输入应用ID" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="支付金额">
-              <el-input size="small" v-model="editForm.payAmount" auto-complete="off" placeholder="请输入通知回调" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="货道号">
-              <el-input size="small" v-model="editForm.aisleNo" auto-complete="off" placeholder="请输入加密类型" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="买家标识">
-              <el-input size="small" v-model="editForm.openId" auto-complete="off" placeholder="请输入商户签名密钥" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="子商户号">
-              <el-input size="small" v-model="editForm.subMchId" auto-complete="off" placeholder="请输入支付宝卖家" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="公司名称">
-              <el-input size="small" v-model="editForm.deptName" auto-complete="off" placeholder="请输入名称" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="交易单号">
-              <el-input size="small" v-model="editForm.transId" auto-complete="off" placeholder="请输入商户号" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="子支付方式">
-              <el-input size="small" v-model="editForm.subPayType" auto-complete="off" placeholder="请输入商户号" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="终端编号">
-              <el-input size="small" v-model="editForm.machineNo" auto-complete="off" placeholder="请输入微信子商户" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="商品价格">
-              <el-input size="small" v-model="editForm.goodsPrice" auto-complete="off" placeholder="请输入应用ID" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="商品名称">
-              <el-input size="small" v-model="editForm.goodsName" auto-complete="off" placeholder="请输入通知回调" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="订单状态">
-              <el-input size="small" v-model="editForm.orderStatus" auto-complete="off" placeholder="请输入加密类型" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="商户号">
-              <el-input size="small" v-model="editForm.mchId" auto-complete="off" placeholder="请输入商户签名密钥" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="编辑用户">
-              <el-input size="small" v-model="editForm.editUser" auto-complete="off" placeholder="请输入支付宝卖家" disabled></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="备注">
-          <el-input size="small" v-model="editForm.remark" auto-complete="off" placeholder="请输入微信证书路径" disabled></el-input>
+    </el-form> -->
+    <div class='form-inline'>
+      <el-form :inline="true"
+              :model="formInline"
+              class="demo-form-inline">
+        <el-form-item label="用户id/姓名:">
+          <el-input v-model="formInline.user"
+                    placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="科室:">
+          <el-select v-model="formInline.region" value='全部选择'
+                    placeholder="请选择">
+            <el-option label="全部选择"
+                      value="shanghai"></el-option>
+            <el-option label="区域二"
+                      value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职称:">
+          <el-select v-model="formInline.region"
+                    placeholder="请选择">
+            <el-option label="全部选择"
+                      value="shanghai"></el-option>
+            <el-option label="区域二"
+                      value="beijing"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
-    </el-dialog>
+      <el-form :inline="true"
+              :model="formInline"
+              class="demo-form-inline">
+        <div class="block">
+          <span class="demonstration">注册时间:</span>
+          <el-date-picker
+            v-model="value1"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
+        </div>
+        <div class="block deadline ">
+          <span class="demonstration">&nbsp至&nbsp</span>
+          <el-date-picker
+            v-model="value1"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
+        </div>
+        <el-form-item label="认证状态:">
+          <el-select v-model="formInline.region"
+                    placeholder="请选择">
+            <el-option label="全部选择"
+                      value="shanghai"></el-option>
+            <el-option label="区域二"
+                      value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <el-form class='button'>
+          <el-button type="primary"
+                    @click="onSubmit">查询</el-button>
+          <el-button @click="onSubmit">重置</el-button>
+      </el-form>
+    </div>
+    <div class='information'>
+      <div class="Categories">
+        <div class="page">
+          <p>用户数量</p>
+          <p class='sfigure'>1000</p>
+        </div>
+        <div class="page">
+          <p>注册人数</p>
+          <p class='sfigure'>400</p>
+        </div>
+        <div class="page">
+          <p>认证人数</p>
+          <p class='sfigure'>400</p>
+        </div>
+        <div class="page">
+          <p>完成问卷人数</p>
+          <p class='sfigure'>500</p>
+        </div>
+        <div class="page">
+          <p>平均完成问卷数</p>
+          <p class='sfigure'>2.0</p>
+        </div>
+        <div class="page">
+          <p>平均获得积分数</p>
+          <p class='sfigure'>40</p>
+        </div>
+      </div>
+    </div>
+    <div class='operation'>
+      <div class='result'>
+        <icon class='icon iconfont'>&#xe66e;</icon>
+        <span>查询结果总计:</span>
+        <span class='figure'>36.4万</span>
+      </div>
+      <div class='addition'>
+        <el-button>导出</el-button>
+      </div>
+    </div>
+    <div class='status'>
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%;height:300px"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="用户id"
+          align="center"
+          width="60">
+          <template slot-scope="scope">{{ scope.row.date }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="微信昵称"
+          width="110">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="姓名"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="性别"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="医院"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="科室"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="职称"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="认证状态"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="完成问卷数"
+          width="90"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="获得积分"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="剩余积分"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="修改时间"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="用户状态"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="操作"
+          show-overflow-tooltip>
+            <span>删除</span>
+            <span>审核</span>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -237,263 +321,6 @@ export default {
     getdata(parameter) {
       this.loading = true
       // 模拟数据开始
-      let res = {
-        code: 0,
-        msg: null,
-        count: 23,
-        data: [
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1526380193000,
-            editTime: 1526380193000,
-            orderId: 109,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: 'xxxx',
-            transId: 'xxxx',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '退款',
-            machineNo: '111111',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: -0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 14,
-            openId: null,
-            mchId: '111111111111111',
-            subMchId: null,
-            remark: '不允许从此IP发起交易: 101.81.251.226'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1526380176000,
-            editTime: 1526380176000,
-            orderId: 108,
-            deptId: 1,
-            deptName: 'xxxxxx',
-            orderNo: 'xxxx',
-            transId: 'xxxxx',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '退款',
-            machineNo: 'J1AX904002',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: -0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 14,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: '不允许从此IP发起交易: 101.81.251.226'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1524921444000,
-            editTime: 1524894094000,
-            orderId: 107,
-            deptId: 1,
-            deptName: 'xxxxxx',
-            orderNo: 'J1AX90400220180428101723945',
-            transId: '4200000137201804287543647891',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '消费',
-            machineNo: 'J1AX904002',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 7,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: '无法找到指定的账单'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1521307596000,
-            editTime: 1524641207000,
-            orderId: 20,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180318142634440',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '111111111111111',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 7,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: '1111111111111111111111'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520195909000,
-            editTime: 1520195909000,
-            orderId: 19,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180305183828606',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520035180000,
-            editTime: 1520035180000,
-            orderId: 18,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '4200000056201803031934477774',
-            transId: '9300079120180303170851281',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '退款',
-            machineNo: '222222222222222222',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 8,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520020261000,
-            editTime: 1520185478000,
-            orderId: 17,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303175059985',
-            transId: '4200000072201803031887274444',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 7,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: '不允许从此IP发起交易: 116.247.119.165'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019911000,
-            editTime: 1520020075000,
-            orderId: 16,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303174511778',
-            transId: '4200000055201803031949877221',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019776000,
-            editTime: 1520019776000,
-            orderId: 15,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303174256156',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019729000,
-            editTime: 1520019729000,
-            orderId: 14,
-            deptId: 1,
-            deptName: '上海XX',
-            orderNo: '9300079120180303174208429',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
-          }
-        ]
-      }
       this.loading = false
       this.listData = res.data
       this.pageparm.currentPage = this.formInline.page
@@ -617,11 +444,145 @@ export default {
 </script>
 
 <style scoped>
+.goods{
+  background: #E6E6E6;
+}
 .user-search {
   margin-top: 20px;
 }
 .userRole {
   width: 100%;
+}
+.date{
+  /* margin-left: 50px; */
+  /* float: left; */
+}
+.block {
+  float: left;
+  margin-left: 30px;
+}
+.button{
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  margin-left: 33px;
+}
+.QuestIonnAire{
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  border-top: 2px solid #E6E6E6;
+  border-bottom: 2px solid #E6E6E6;
+  padding: 0 22px;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 5px;
+  /* margin-left: 13px; */
+}
+.el-breadcrumb{
+  width: 100%;
+  height: 35px;
+  box-sizing: border-box;
+  padding: 10px 22px;
+  background: white;
+  border-radius: 5px;
+  margin-top: 1.5px;
+  /* margin-left: 13px; */
+}
+.demo-form-inline{
+  width: 100%;
+  height: 70px;
+  /* background: red; */
+  line-height: 70px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  /* background: white; */
+}
+.el-form-item{
+  margin-left: 31px;
+}
+
+.information{
+  width: 100%;
+  height: 135px;
+  background: white;
+  /* margin-top: 10px; */
+  border-radius: 5px;
+  position: relative;
+}
+.Categories{
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 110px;
+  overflow: hidden;
+  /* background: burlywood; */
+}
+
+.operation{
+  width: 100%;
+  height: 130px;
+  background: white;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.result{
+  width: 90%;
+  height: 35px;
+  background: #E2F0FA;
+  border-radius: 5px;
+  border:1px solid #A7D3F1;
+  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
+  line-height: 35px;
+  font-size: 10px;
+}
+.figure{
+  font-weight: 600;
+}
+.addition{
+  margin-top: 20px;
+}
+.iconfont{
+  margin-left: 20px;
+}
+.form-inline{
+  width: 100%;
+  height: 200px;
+  background: white;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.el-pagination{
+  background: white;
+  margin-top: 10px;
+  margin-left: 200px;
+}
+.page{
+  float: left;
+  margin-left: 100px;
+  margin-top: 20px;
+  text-align: center;
+}
+.sfigure{
+  font-size: 20px;
+  margin-top: 30px;
+}
+.el-table__row{
+  background: red;
+}
+.deadline{
+  margin-left: 5px;
+}
+.status{
+  width: 100%;
+  height: 360px;
+  background: white;
+}
+.el-table th>.cell{
+  padding-left: 15px;
 }
 </style>
 
